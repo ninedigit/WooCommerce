@@ -1,0 +1,50 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\CreateNuGetPackage.props" />
+  <Import Project="..\Versions.props" />
+
+  <PropertyGroup>
+	<OutputType>Library</OutputType>
+	<TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+	<PackageReference Include="CommunityToolkit.Diagnostics" Version="8.2.1" />
+	<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.4" />
+	<PackageReference Include="WooCommerceNET" Version="0.8.6" />
+  </ItemGroup>
+
+	<PropertyGroup>
+		<PackageId>NineDigit.WooCommerce</PackageId>
+		<Title>NineDigit WooCommerce API Client</Title>
+		<Authors>Juraj Málach</Authors>
+		<Company>Nine Digit, s.r.o.</Company>
+		<Version>$(Version)</Version>
+		<InformationalVersion>$(InformationalVersion)</InformationalVersion>
+		<PackageVersion>$(InformationalVersion)</PackageVersion>
+		<PackageReleaseNotes></PackageReleaseNotes>
+		<Description>WooCommerce API client.</Description>
+		<PackageTags>woocommerce</PackageTags>
+		<PackageProjectUrl>https://github.com/ninedigit/WooCommerce</PackageProjectUrl>
+		<RepositoryType>git</RepositoryType>
+		<RepositoryUrl>https://github.com/ninedigit/ChduLite.git</RepositoryUrl>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<IncludeSymbols>true</IncludeSymbols>
+		<Copyright>(c) 2023</Copyright>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="$(SolutionDir)README.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<DocumentationFile>$(ProjectDir)$(OutputPath)$(MSBuildProjectName).xml</DocumentationFile>
+	</PropertyGroup>
+	
+</Project>

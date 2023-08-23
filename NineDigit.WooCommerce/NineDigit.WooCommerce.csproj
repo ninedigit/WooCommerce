@@ -29,7 +29,7 @@
 		<PackageTags>woocommerce</PackageTags>
 		<PackageProjectUrl>https://github.com/ninedigit/WooCommerce</PackageProjectUrl>
 		<RepositoryType>git</RepositoryType>
-		<RepositoryUrl>https://github.com/ninedigit/ChduLite.git</RepositoryUrl>
+		<RepositoryUrl>https://github.com/ninedigit/WooCommerce.git</RepositoryUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>

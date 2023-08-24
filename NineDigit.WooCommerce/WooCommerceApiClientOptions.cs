@@ -4,6 +4,14 @@ namespace NineDigit.WooCommerce;
 
 public sealed class WooCommerceApiClientOptions
 {
+    const string WooCommerceApiV3Postfix = "/wp-json/wc/v3";
+
+    /// <summary>
+    /// </summary>
+    /// <param name="url">The WooCommerce webpage URL. E.g. <c>https://foo.bar</c> or <c>https://foo.bar/wp-json/wc/v3</c></param>
+    /// <param name="publicKey">The public key</param>
+    /// <param name="privateKey">The private key (secret)</param>
+    /// <exception cref="ArgumentException"></exception>
     public WooCommerceApiClientOptions(Uri url, string publicKey, string privateKey)
     {
         Guard.IsNotNull(url);
@@ -20,7 +28,7 @@ public sealed class WooCommerceApiClientOptions
         if (string.IsNullOrWhiteSpace(privateKey))
             throw new ArgumentException($"'{nameof(privateKey)}' cannot be null or whitespace.", nameof(privateKey));
 
-        Url = url;
+        Url = url.EnsurePostfix(WooCommerceApiV3Postfix);
         PublicKey = publicKey;
         PrivateKey = privateKey;
     }

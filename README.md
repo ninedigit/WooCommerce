@@ -1,5 +1,7 @@
 # NineDigit WooCommerce
 
+[![NuGet version (NineDigit.WooCommerce)](https://img.shields.io/nuget/v/NineDigit.WooCommerce)](https://www.nuget.org/packages/NineDigit.WooCommerce/)
+
 Wrapper for [WooCommerceNET](https://github.com/XiaoFaye/WooCommerce.NET) library.
 
 ## Quick start

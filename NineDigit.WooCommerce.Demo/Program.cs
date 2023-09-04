@@ -18,6 +18,14 @@ var clientOpts = new WooCommerceApiClientOptions(new Uri(url), publicKey, privat
 // Instantiate client
 var client = new WooCommerceApiClient(clientOpts, NullLoggerFactory.Instance);
 
+// Get tax rates
+var taxRatesQuery = new TaxRatesQuery
+{
+    Pagination = Pagination.TakeFirst(10),
+};
+var taxRates = await client.GetTaxRatesAsync(taxRatesQuery, CancellationToken.None);
+Console.Write($"{taxRates.Count}/{taxRates.TotalCount} tax rate(s) received.");
+
 // Get orders
 var ordersQuery = new OrdersQuery
 {

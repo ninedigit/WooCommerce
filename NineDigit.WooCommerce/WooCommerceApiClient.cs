@@ -64,62 +64,8 @@ public sealed class WooCommerceApiClient : IDisposable
 
             var items = await this.Client.Product.GetAll(queryParameters);
 
-            if (this.lastResponse is null)
-                throw new InvalidOperationException("Last response expected not to be null.");
-
-            var totalCount = this.lastResponse.GetXWpTotalHeaderValue();
-
-            return new PaginatedResult<Product>(Items: items, TotalCount: totalCount);
+            return CreatePaginatedResult(items);
         }, cancellationToken);
-
-    /// <summary>
-    /// Gets all products (executes multiple request and fetches all pages).
-    /// </summary>
-    /// <param name="filter"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    /// <exception cref="InvalidOperationException"></exception>
-    public async Task<IList<Product>> GetAllProductsAsync(ProductFilter filter, CancellationToken cancellationToken)
-    {
-        Guard.IsNotNull(filter);
-        
-        var query = new ProductsQuery
-        {
-            SortBy = ProductSortingProperty.Id,
-            SortDirection = SortDirection.Ascending,
-            Filter = filter,
-        };
-
-        var result = new List<Product>();
-        var fetchedProductIds = new HashSet<ulong>();
-        var skip = 0;
-        var pageSize = Pagination.MaxTakeValue;
-
-        while (true)
-        {
-            query.Pagination = new Pagination() { Skip = skip, Take = pageSize };
-
-            var currentPageProducts = await this.GetProductsAsync(query, cancellationToken);
-            
-            if (currentPageProducts.Count == 0)
-                break; // No more products to fetch
-
-            foreach (var product in currentPageProducts.Items)
-            {
-                var productId = product.id ?? throw new InvalidOperationException("Non-null product identifier expected");
-
-                if (!fetchedProductIds.Contains(productId))
-                {
-                    result.Add(product);
-                    fetchedProductIds.Add(productId);
-                }
-            }
-
-            skip += pageSize;
-        }
-
-        return result;
-    }
 
     /// <summary>
     /// Gets product by ID.
@@ -163,15 +109,22 @@ public sealed class WooCommerceApiClient : IDisposable
             var queryParameters = new QueryParameterBuilder()
                 .Apply(query)
                 .Build();
-
+            
             var items = await this.Client.Order.GetAll(queryParameters);
+            
+            return CreatePaginatedResult(items);
+        }, cancellationToken);
 
-            if (this.lastResponse is null)
-                throw new InvalidOperationException("Last response expected not to be null.");
+    public Task<PaginatedResult<TaxRate>> GetTaxRatesAsync(TaxRatesQuery? query, CancellationToken cancellationToken)
+        => ExecuteAsync(async () =>
+        {
+            var queryParameters = new QueryParameterBuilder()
+                .Apply(query)
+                .Build();
 
-            var totalCount = this.lastResponse.GetXWpTotalHeaderValue();
+            var items = await this.Client.TaxRate.GetAll(queryParameters);
 
-            return new PaginatedResult<Order>(Items: items, TotalCount: totalCount);
+            return CreatePaginatedResult(items);
         }, cancellationToken);
 
     #region Helpers
@@ -188,8 +141,18 @@ public sealed class WooCommerceApiClient : IDisposable
             this.clientLock.Release();
         }
     }
+
+    private PaginatedResult<T> CreatePaginatedResult<T>(List<T> items)
+    {
+        if (this.lastResponse is null)
+            throw new InvalidOperationException("Last response expected not to be null.");
+
+        var totalCount = this.lastResponse.GetXWpTotalHeaderValue();
+
+        return new PaginatedResult<T>(Items: items, TotalCount: totalCount);
+    }
     #endregion
-    
+
     #region IDisposable
     private bool disposedValue;
 

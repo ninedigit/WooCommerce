@@ -29,13 +29,13 @@ public sealed class WooCommerceApiClient : IDisposable
             requestFilter: this.OnWooCommerceRequest,
             responseFilter: this.OnWooCommerceResponse);
 
-        this.Client = new WCObject(restApi);
+        this.WCObject = new WCObject(restApi);
     }
 
     /// <summary>
-    /// The wrapped client
+    /// The wrapped WooCommerce object
     /// </summary>
-    public WCObject Client { get; }
+    public WCObject WCObject { get; }
 
     #region Event handlers
     private void OnWooCommerceRequest(HttpWebRequest request)
@@ -62,7 +62,7 @@ public sealed class WooCommerceApiClient : IDisposable
                 .Apply(query)
                 .Build();
 
-            var items = await this.Client.Product.GetAll(queryParameters);
+            var items = await this.WCObject.Product.GetAll(queryParameters);
 
             return CreatePaginatedResult(items);
         }, cancellationToken);
@@ -74,7 +74,7 @@ public sealed class WooCommerceApiClient : IDisposable
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     public Task<Product> GetProductAsync(ulong id, CancellationToken cancellationToken)
-        => ExecuteAsync(() => this.Client.Product.Get(id), cancellationToken);
+        => ExecuteAsync(() => this.WCObject.Product.Get(id), cancellationToken);
 
     /// <summary>
     /// Updates all properties of product.
@@ -83,18 +83,8 @@ public sealed class WooCommerceApiClient : IDisposable
     /// <param name="product">The product to update.</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public Task UpdateProductAsync(ulong id, Product product, CancellationToken cancellationToken)
-        => ExecuteAsync(() => this.Client.Product.Update(id, product), cancellationToken);
-
-    /// <summary>
-    /// Updates only non-null properties of product.
-    /// </summary>
-    /// <param name="id">Product ID</param>
-    /// <param name="product">Partially initialized product.</param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    public Task PatchProductAsync(ulong id, Product product, CancellationToken cancellationToken)
-        => ExecuteAsync(() => this.Client.Product.UpdateWithNull(id, product), cancellationToken);
+    public Task<Product> UpdateProductAsync(ulong id, Product product, CancellationToken cancellationToken)
+        => ExecuteAsync(() => this.WCObject.Product.Update(id, product), cancellationToken);
 
     /// <summary>
     /// Gets orders based on query.
@@ -110,7 +100,7 @@ public sealed class WooCommerceApiClient : IDisposable
                 .Apply(query)
                 .Build();
             
-            var items = await this.Client.Order.GetAll(queryParameters);
+            var items = await this.WCObject.Order.GetAll(queryParameters);
             
             return CreatePaginatedResult(items);
         }, cancellationToken);
@@ -122,7 +112,7 @@ public sealed class WooCommerceApiClient : IDisposable
                 .Apply(query)
                 .Build();
 
-            var items = await this.Client.TaxRate.GetAll(queryParameters);
+            var items = await this.WCObject.TaxRate.GetAll(queryParameters);
 
             return CreatePaginatedResult(items);
         }, cancellationToken);

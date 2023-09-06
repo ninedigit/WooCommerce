@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging.Abstractions;
 using NineDigit.WooCommerce;
+using WooCommerceNET.WooCommerce.v3;
 
 // Load the sensitive data from the 'appsettings.json' configuration file.
 var configuration = new ConfigurationBuilder()
@@ -57,4 +58,15 @@ Console.Write($"{products.Count}/{products.TotalCount} product(s) received.");
 // Get single product by ID
 var productId = 12660u;
 var product = await client.GetProductAsync(productId, CancellationToken.None);
-Console.Write($"Product name: {product.name}");
+Console.Write($"Product stock quantity: {product.stock_quantity}");
+
+// Patch product
+var partialProduct = new Product()
+{
+    manage_stock = true,
+    stock_quantity = product.stock_quantity + 1,
+    stock_status = ProductStockStatus.InStock
+};
+
+var productAfter = await client.UpdateProductAsync(productId, partialProduct, CancellationToken.None);
+Console.Write($"New product stock quantity: {productAfter.stock_quantity}");

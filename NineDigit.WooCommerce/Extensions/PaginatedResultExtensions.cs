@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace NineDigit.WooCommerce;
 
-internal static class PaginationExtensions
+public static class PaginationExtensions
 {
     public static bool IsLastPage<T>(this Pagination pagination, PaginatedResult<T> paginatedResult)
     {

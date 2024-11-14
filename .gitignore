@@ -476,3 +476,4 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 /NineDigit.WooCommerce/NineDigit.WooCommerce.xml
+/CodeSignTool.props
